@@ -5,30 +5,27 @@ var config = require("./../../config/config");
 var states = config.states;
 var logger = require('./../utils/logger.js')(module);
 var parseString = require('xml2js').parseString;
-
+var response = {};
+var completeQueries = 0;
+var clear;
 
 
 module.exports.mapus = function(params, callback){
-	var response = {};
+	
 	response.mapData = {};
 	response.orderedData = {};
 	response.mapDataTitle = {};
 	response.mapDataFills = {};
 	response.mapDataLegends = {};
-    var completeQueries = 0;
+ 
 
     var datasets = [{name:"lead",title:"Lead contamination", defaultFill:"#ECECEA", selectedFill:'#f5d76e', thresholds:[{val:0, color:"#D5E7E6", key:"L"}, {val:25, color:"#74AFAD", key:"M"}, {val:50, color:"#558C89", key:"H"}, {val:75, color:"#2a4644", key:"VH"}]}];
 
 
     datasets.forEach(function(dataset){
-    	var results = {};
-        var resultsArray = [];
+    	
         var allTermQuery;
-        var infectedPercentage;
-        var higherCount;
-		var lowerCount;
-		var notDetected;
-		var th;
+        
 
         var keys = Object.keys(states);
 	    	keys.forEach(function(key){
@@ -42,56 +39,9 @@ module.exports.mapus = function(params, callback){
 				      statecode: key
 				    }
 				}
-	   		/*});
-   		});*/
-
-		queryService.getData(allTermQuery,function(error,data, query){
-				completeQueries++;
-
-				if(error)
-					logger.error("ERROR: ", JSON.stringify(error), JSON.stringify(allTermQuery));
-
-				if(data){
-					parseString(data, function (err, result) {
-						if (err) throw err;
-				    data = result['WQX']['Organization'][0]['Activity'];
-					});
-				}else
-					data = {};
-
-				higherCount = 0;
-				lowerCount = 0;
-				notDetected = 0;
-
-				if(data.length > 0){
-						for(var i = 0; i < data.length; i++){
-						if(data[i]['Result'][0]['ResultDescription'][0]['ResultDetectionConditionText']){
-							notDetected++;
-						}else if(data[i]['Result'][0]['ResultDescription'][0]['ResultMeasure'][0]['ResultMeasureValue'][0] >= 15){
-							higherCount++;
-						}else if(data[i]['Result'][0]['ResultDescription'][0]['ResultMeasure'][0]['ResultMeasureValue'][0] < 15){
-							lowerCount++;
-						}
-					}
-
-					infectedPercentage = Math.round((lowerCount + higherCount) * 100 / data.length);
-				}
-				
-
-				th = findKeyFill(dataset, infectedPercentage );
-				results[states[key]] = { fillKey: th.key, totalSamples: data.length, infectedSamples: lowerCount + higherCount, infectedPercentage: infectedPercentage, label: th.val};
-				response.mapData[dataset.name] = results;
-				response.mapDataTitle[dataset.name] = dataset.title;
-				response.mapDataFills[dataset.name] = getFills(dataset);
-				response.mapDataLegends[dataset.name] = getLegends(dataset);
-
-				if (completeQueries == datasets.length){
-					callback(null, response);
-				}
-
-			});
-    });//end dataset iteration
-
+			clear = setInterval(function(){some(keys, allTermQuery, dataset)},10000);
+					
+	});
 });
 
 	 function findKeyFill(dataset, count){
@@ -140,5 +90,57 @@ module.exports.mapus = function(params, callback){
 	      	return 1;
 	    	}
 	  	  return 0;
+	  }
+
+	  function some(keys, allTermQuery, dataset){
+	  	queryService.getData(allTermQuery,function(error,data, query){
+				completeQueries++;
+
+				if(error)
+					logger.error("ERROR: ", JSON.stringify(error), JSON.stringify(allTermQuery));
+
+				if(data){
+					parseString(data, function (err, result) {
+						if (err) throw err;
+				    data = result['WQX']['Organization'][0]['Activity'];
+					});
+				}else
+					data = {};
+
+				var higherCount = 0;
+				var lowerCount = 0;
+				var notDetected = 0;
+				var infectedPercentage;
+				var th;
+				var results = {};
+        		var resultsArray = [];
+
+				if(data.length > 0){
+						for(var i = 0; i < data.length; i++){
+						if(data[i]['Result'][0]['ResultDescription'][0]['ResultDetectionConditionText']){
+							notDetected++;
+						}else if(data[i]['Result'][0]['ResultDescription'][0]['ResultMeasure'][0]['ResultMeasureValue'][0] >= 15){
+							higherCount++;
+						}else if(data[i]['Result'][0]['ResultDescription'][0]['ResultMeasure'][0]['ResultMeasureValue'][0] < 15){
+							lowerCount++;
+						}
+					}
+
+					infectedPercentage = Math.round((higherCount) * 100 / data.length);
+				}
+				
+
+				th = findKeyFill(dataset, infectedPercentage );
+				results[states[allTermQuery.params.statecode]] = { fillKey: th.key, totalSamples: data.length, infectedSamples: higherCount, infectedPercentage: infectedPercentage, label: th.val};
+				response.mapData[dataset.name] = results;
+				response.mapDataTitle[dataset.name] = dataset.title;
+				response.mapDataFills[dataset.name] = getFills(dataset);
+				response.mapDataLegends[dataset.name] = getLegends(dataset);
+
+				if (completeQueries == keys.length){
+						callback(null, response);
+						clearInterval(clear);
+				}
+			});
 	  }
 };

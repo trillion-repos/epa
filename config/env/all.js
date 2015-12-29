@@ -20,7 +20,7 @@ module.exports = {
 		    "US:06": "CA",
 		    "US:08": "CO",
 		    "US:09": "CT",
-		    /*"US:10": "DE",
+		    "US:10": "DE",
 		    "US:11": "DC",
 		    "US:12": "FL",
 		    "US:13": "GA",
@@ -63,7 +63,6 @@ module.exports = {
 		    "US:53": "WA",
 		    "US:54": "WV",
 		    "US:55": "WI",
-		    "US:56": "WY"*//*,
-		    "u.s.":"nationwide"*/
+		    "US:56": "WY"
 		}
 };

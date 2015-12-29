@@ -26,3 +26,4 @@ module.exports.getData = function(query, callback){
 
   lastQueryTimeStamp = new Date().getTime();
 };
+
