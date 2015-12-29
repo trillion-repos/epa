@@ -1,6 +1,6 @@
 'use strict';
 /**
- * Module dependencies.
+ * Module dependencies. with updateCommands
  */
 var init = require('./config/init')(),
 	config = require('./config/config'),
