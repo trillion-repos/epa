@@ -18,7 +18,7 @@ module.exports.mapus = function(params, callback){
     var completeQueries = 0;
 
 
-    var datasets = [{name:"Lead",title:"Drug Recalls Per State", defaultFill:"#ECECEA", selectedFill:'#f5d76e', thresholds:[{val:200, color:"#D5E7E6", key:"L"}, {val:300, color:"#74AFAD", key:"M"}, {val:400, color:"#558C89", key:"H"}, {val:400, color:"#2a4644", key:"VH"}]}];
+    var datasets = [{name:"Lead",title:"Lead contamination", defaultFill:"#ECECEA", selectedFill:'#f5d76e', thresholds:[{val:0, color:"#D5E7E6", key:"L"}, {val:25, color:"#74AFAD", key:"M"}, {val:50, color:"#558C89", key:"H"}, {val:75, color:"#2a4644", key:"VH"}]}];
 
 
     datasets.forEach(function(dataset){
@@ -46,43 +46,51 @@ module.exports.mapus = function(params, callback){
 				if(data){
 					parseString(data, function (err, result) {
 						if (err) throw err;
-				    data = result;
+				    data = result['WQX']['Organization'][0]['Activity'];
 					});
 				}else{
 					data = {};
 				}
 
-				if(!data.results){
-					logger.info("No Results for: " + JSON.stringify(allTermQuery));
-					data.results = [];
+				var higherCount = 0;
+				var lowerCount = 0;
+				var notDetected = 0;
+
+				if(data.length > 0){
+						for(var i = 0; i < data.length; i++){
+						if(data[i]['Result'][0]['ResultDescription'][0]['ResultDetectionConditionText']){
+							notDetected++;
+						}else if(data[i]['Result'][0]['ResultDescription'][0]['ResultMeasure'][0]['ResultMeasureValue'][0] > 15){
+							higherCount++;
+						}else if(data[i]['Result'][0]['ResultDescription'][0]['ResultMeasure'][0]['ResultMeasureValue'][0] < 15){
+							lowerCount++;
+						}
+					}
+
+					var infectedPercentage = (lowerCount + higherCount) * 100 / data.length;
 				}
-
-				logger.debug("RAW DATA: ", data);
-
-				var stateCounts = {};
-				data.results.forEach(function(entry){
-					logger.info("Chirag");
-				});
+				
 
 				/*for(var state in stateCounts){
 					var th = findKeyFill(dataset, stateCounts[state] );
 					results[state.toUpperCase()] = { fillKey: th.key, count: stateCounts[state], label: th.val};
 					resultsArray.push({state:state, count:stateCounts[state]});
-				}
+				}*/
+				
 
-				resultsArray.sort(compareCount);
-
+				var th = findKeyFill(dataset, infectedPercentage );
+				results[0] = { fillKey: th.key, totalSamples: data.length, infectedSamples: lowerCount + higherCount, infectedPercentage: infectedPercentage, label: th.val};
+				/*resultsArray.push({state:state, count:stateCounts[state]});*/
 				response.mapData[dataset.name] = results;
-				response.orderedData[dataset.name] = resultsArray;
+				/*response.orderedData[dataset.name] = resultsArray;
 				response.mapDataTitle[dataset.name] = dataset.title;
 				response.mapDataFills[dataset.name] = getFills(dataset);
-				response.mapDataLegends[dataset.name] = getLegends(dataset);
+				response.mapDataLegends[dataset.name] = getLegends(dataset);*/
 
 				if (completeQueries == datasets.length){
-					logger.debug('results: ' + JSON.stringify(response));
+					/*logger.debug('results: ' + JSON.stringify(response));*/
 					callback(null, response);
 				}
-*/
 			});
     });//end dataset iteration
 
