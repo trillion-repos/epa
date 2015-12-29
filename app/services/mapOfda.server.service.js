@@ -18,7 +18,7 @@ module.exports.mapus = function(params, callback){
     var completeQueries = 0;
 
 
-    var datasets = [{name:"Lead",title:"Lead contamination", defaultFill:"#ECECEA", selectedFill:'#f5d76e', thresholds:[{val:0, color:"#D5E7E6", key:"L"}, {val:25, color:"#74AFAD", key:"M"}, {val:50, color:"#558C89", key:"H"}, {val:75, color:"#2a4644", key:"VH"}]}];
+    var datasets = [{name:"lead",title:"Lead contamination", defaultFill:"#ECECEA", selectedFill:'#f5d76e', thresholds:[{val:0, color:"#D5E7E6", key:"L"}, {val:25, color:"#74AFAD", key:"M"}, {val:50, color:"#558C89", key:"H"}, {val:75, color:"#2a4644", key:"VH"}]}];
 
 
     datasets.forEach(function(dataset){
@@ -30,7 +30,7 @@ module.exports.mapus = function(params, callback){
 		    noun:'Result',
 		    endpoint:'search?mimeType=xml',
 		    params:{
-		      statecode:'US%3A51',
+		      statecode:'US:51',
 		      characteristicName:'Lead',
 		      startDateLo:'07-28-2015'
 		    }
@@ -81,11 +81,12 @@ module.exports.mapus = function(params, callback){
 				var th = findKeyFill(dataset, infectedPercentage );
 				results[0] = { fillKey: th.key, totalSamples: data.length, infectedSamples: lowerCount + higherCount, infectedPercentage: infectedPercentage, label: th.val};
 				/*resultsArray.push({state:state, count:stateCounts[state]});*/
+				logger.info(JSON.stringify(results[0]));
 				response.mapData[dataset.name] = results;
-				/*response.orderedData[dataset.name] = resultsArray;
+				/*response.orderedData[dataset.name] = resultsArray;*/
 				response.mapDataTitle[dataset.name] = dataset.title;
 				response.mapDataFills[dataset.name] = getFills(dataset);
-				response.mapDataLegends[dataset.name] = getLegends(dataset);*/
+				response.mapDataLegends[dataset.name] = getLegends(dataset);
 
 				if (completeQueries == datasets.length){
 					/*logger.debug('results: ' + JSON.stringify(response));*/
