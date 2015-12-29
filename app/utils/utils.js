@@ -21,6 +21,12 @@ if (typeof String.prototype.startsWith != 'function') {
 	  };
 	}
 
+if (typeof String.prototype.capitalize != 'function') {
+String.prototype.capitalize = function(){
+       return this.replace( /(^|\s)([a-z])/g , function(m,p1,p2){ return p1+p2.toUpperCase(); } );
+      };
+}
+
 if (typeof String.prototype.replaceAll != 'function') {
 	  String.prototype.replaceAll = function (find, replace){
 	    return this.replace(new RegExp(escapeRegExp(find), 'g'), replace);

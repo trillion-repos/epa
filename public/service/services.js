@@ -66,10 +66,10 @@ function(FetchOpenFDASrvc) {
      }
      
      function getMapData(routeParams, qId, callback){    	 
-    	 if (mapData){
-    		 callback(null, mapData, true);
-    	 }
-    	 else{
+//     	 if (mapData){
+//     		 callback(null, mapData, true);
+//     	 }
+//     	 else{
 	    	 FetchOpenFDASrvc.get({appId:routeParams.appId, modId: routeParams.modId, fnId:routeParams.fnId, qId:qId, startDate:routeParams.date},
 	 				function success(response) {
 	 					
@@ -90,7 +90,7 @@ function(FetchOpenFDASrvc) {
 	 					console.log("Error:" + JSON.stringify(errorResponse));
 	 					callback(errorResponse);
 	 					});
-    	 }
+//     	 }
      }
      
      function fetchData (qId, state, routeParams, year, month, fk, callback){
