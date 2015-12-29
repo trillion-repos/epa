@@ -17,7 +17,7 @@ module.exports.queryOpenFDA = function(req, res){
     }
     
     if(typeof(openFDAService[queryId]) == 'function'){    	
-    	
+    	req.query.datasetId = req.params.datasetId;
     	openFDAService[queryId](req.query, function(error, response){
     		if(error)
     			res.status("500").send(error.message);

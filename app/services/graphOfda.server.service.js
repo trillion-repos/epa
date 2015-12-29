@@ -2,138 +2,79 @@
 
 var queryService = require("./queryOfda.server.service");
 var config = require('./../../config/config');
+var parseString = require('xml2js').parseString;
 
 module.exports.graphRpy = function (params, callback){
 	var response = {};
 	var graphEntries = {};
-	var datasets = [{name:'drug', displayName:"Drugs"},{name:'device', displayName:"Devices"},{name:'food', displayName:"Food"}];
-	var completeQueries = 0;
+	var datasets = [{name:params.datasetId, displayName:params.datasetId.capitalize()}];
 	var state = config.states[params.state];
-	var monYearSwitch = params.year ? 6 : 4;
-	var startYear = params.year ? params.year : (new Date().getFullYear() - 10);
-	var endYear = params.year ? new Number(params.year) + 1 : new Number(new Date().getFullYear()) + 1;
 
+	
+	console.log("PARAMS: "+JSON.stringify(params));
+	
 	datasets.forEach(function(dataset){
 		var query = {
 			    queryId: 1,
-			    noun:dataset.name,
-			    endpoint:'enforcement',
-			    params:{
-			      search:'(distribution_pattern:"'+params.state+'"+distribution_pattern:"'+state+'")+AND+(report_date:['+startYear+'-01-01+TO+'+endYear+'-01-01])',
-			      count:'report_date',
-			      limit:1000, //if set to 0, it will default to 100 results
-			      skip:0
-			    }
+			    noun:'Result',
+		    endpoint:'search?mimeType=xml',
+		    params:{
+		      statecode:'US:51',
+		      characteristicName:params.datasetId.capitalize(),
+		      startDateLo:params.startDate
+		    }
 			  };
 
 //				console.log(query);
 
 		queryService.getData(query,function(error,data, query){
-			completeQueries++;
 
 			if(error){
 				console.error("ERROR: ", JSON.stringify(error), JSON.stringify(query));
 			}
 
 			if(data){
-				data = JSON.parse(data);
-			}else{
-				data = {};
-			}
-
-			if(!data.results){
-				console.log("No Results for: " + JSON.stringify(query));
-				data.results = [];
-			}
-			//console.log("SIZE:" + data.results.length);
-			//console.log("RAW DATA: ", data);
-
-
-			var yearTotals = {};
-			data.results.forEach(function(entry){
-				var currentYear = entry.time.substring(0,monYearSwitch);
-
-				if(yearTotals[currentYear])
-					yearTotals[currentYear] += entry.count;
-				else
-					yearTotals[currentYear] = entry.count;
-
-			});
-
-			//console.log("YEAR TOTALS: ", dataset.name, " : " ,JSON.stringify(yearTotals));
-
-			for(var year in yearTotals){
-
-				if(!graphEntries[year] )
-					graphEntries[year] = {};
-
-				graphEntries[year][query.noun]= yearTotals[year];
-			}
-
-			if (completeQueries == datasets.length){
-			//	console.log(JSON.stringify(graphEntries));
-				var graphData = [];
-				var month = null;
-				for(var year in graphEntries){
-					if(params.year){
-						month = year.substring(4);
-						month = monthArray[new Number(month) - 1];
-					}
-					var y = [];
-
-					datasets.forEach(function(dataset){
-						if(graphEntries[year][dataset.name]){
-							y.push(graphEntries[year][dataset.name]);
+					parseString(data, function (err, result) {
+						if (err) throw err;
+						
+				    data = result.WQX.Organization[0].Activity;
+						response = {"graph":{"series":["Lead"], data:[]}};
+						
+						var graphData = {};
+						data.forEach(function(d){
+							
+							var year = new Date(d.ActivityDescription[0].ActivityStartDate[0]).getFullYear();
+							
+							if(!graphData[year])
+								graphData[year] = [];
+							
+							if(d.Result[0].ResultDescription[0].ResultMeasure && 
+								 														d.Result[0].ResultDescription[0].ResultMeasure[0].ResultMeasureValue[0] >= 0.15){
+								graphData[year].push(d.Result[0].ResultDescription[0].ResultMeasure[0].ResultMeasureValue[0]);
+							}
+						});
+						
+						
+						for(var key in graphData){
+							var obj ={};
+							obj.x = key;
+							obj.y = [];
+							obj.y.push(graphData[key].length);
+							response.graph.data.push(obj);
 						}
-						else{
-							y.push(0);
-						}
+						
+						console.log(JSON.stringify(response));
 					});
-
-					graphData.push({x:month || year, y: y});
-				}
-
-			//	console.log(JSON.stringify(graphData));
-				response.graph = {series: getDisplayNames(), data: graphData};
-
-				if(params.year){
-					response.graphTitle = "Recalls for " + params.year + " per Month for " + state.replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
-				}
-				else{
-					response.graphTitle = "Recalls per Year for " + state.replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
-				}
-
-			//	console.log('GRAPH RESPONSE: ' + JSON.stringify(response));
-				callback(null, response);
+				}else{
+				console.log("No Results for: " + JSON.stringify(query));
 			}
+					
+				
+					response.graphTitle = "Number of Samples found with "+ dataset.displayName + " for "  + 
+						state.replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
 
-
+			//	console.log('GRAPH RESPONSE: ' + JSON.s for ringify(response));
+				callback(null, response);
 		});
-
-
 	});
-
-
-	function getDisplayNames(){
-		var displayNames = [];
-		datasets.forEach(function(dataset){
-			displayNames.push(dataset.displayName);
-		});
-
-		return displayNames;
-	}
-
-	var monthArray = new Array();
-	monthArray[0] = "Jan";
-	monthArray[1] = "Feb";
-	monthArray[2] = "Mar";
-	monthArray[3] = "Apr";
-	monthArray[4] = "May";
-	monthArray[5] = "Jun";
-	monthArray[6] = "Jul";
-	monthArray[7] = "Aug";
-	monthArray[8] = "Sep";
-	monthArray[9] = "Oct";
-	monthArray[10] = "Nov";
-	monthArray[11] = "Dec";
 };
