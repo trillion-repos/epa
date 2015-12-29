@@ -79,9 +79,9 @@ module.exports.mapus = function(params, callback){
 				
 
 				var th = findKeyFill(dataset, infectedPercentage );
-				results[0] = { fillKey: th.key, totalSamples: data.length, infectedSamples: lowerCount + higherCount, infectedPercentage: infectedPercentage, label: th.val};
+				results['VA'] = { fillKey: th.key, totalSamples: data.length, infectedSamples: lowerCount + higherCount, infectedPercentage: infectedPercentage, label: th.val};
 				/*resultsArray.push({state:state, count:stateCounts[state]});*/
-				logger.info(JSON.stringify(results[0]));
+				logger.info(JSON.stringify(results));
 				response.mapData[dataset.name] = results;
 				/*response.orderedData[dataset.name] = resultsArray;*/
 				response.mapDataTitle[dataset.name] = dataset.title;
