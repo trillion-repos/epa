@@ -28,20 +28,25 @@ module.exports.mapus = function(params, callback){
         
 
         var keys = Object.keys(states);
-	    	keys.forEach(function(key){
-		        allTermQuery = {
+	    	for(var j = 0; j < keys.length; j++){
+		        
+			/*clear = setInterval(function(){some(keys, allTermQuery, dataset)},10000);*/
+			clear = setInterval(function(){
+				allTermQuery = {
 				    queryId: 1,
 				    noun:'Result',
 				    endpoint:'search?mimeType=xml',
 				    params:{
 				      characteristicName:'Lead',
 				      startDateLo: params.startDate,
-				      statecode: key
+				      statecode: keys[j]
 				    }
 				}
-			clear = setInterval(function(){some(keys, allTermQuery, dataset)},10000);
+				some(keys, allTermQuery, dataset);
+			},1000);
+			
 					
-	});
+	}
 });
 
 	 function findKeyFill(dataset, count){
