@@ -17,84 +17,82 @@ module.exports.mapus = function(params, callback){
 	response.mapDataLegends = {};
     var completeQueries = 0;
 
-
     var datasets = [{name:"lead",title:"Lead contamination", defaultFill:"#ECECEA", selectedFill:'#f5d76e', thresholds:[{val:0, color:"#D5E7E6", key:"L"}, {val:25, color:"#74AFAD", key:"M"}, {val:50, color:"#558C89", key:"H"}, {val:75, color:"#2a4644", key:"VH"}]}];
 
 
     datasets.forEach(function(dataset){
     	var results = {};
         var resultsArray = [];
+        var allTermQuery;
+        var infectedPercentage;
+        var higherCount;
+		var lowerCount;
+		var notDetected;
+		var th;
 
-		var allTermQuery = {
-		    queryId: 1,
-		    noun:'Result',
-		    endpoint:'search?mimeType=xml',
-		    params:{
-		      statecode:'US:51',
-		      characteristicName:'Lead',
-		      startDateLo:'07-28-2015'
-		    }
-		  }
+        var keys = Object.keys(states);
+	    	keys.forEach(function(key){
+		        allTermQuery = {
+				    queryId: 1,
+				    noun:'Result',
+				    endpoint:'search?mimeType=xml',
+				    params:{
+				      characteristicName:'Lead',
+				      startDateLo: params.startDate,
+				      statecode: key
+				    }
+				}
+	   		/*});
+   		});*/
 
 		queryService.getData(allTermQuery,function(error,data, query){
 				completeQueries++;
 
-				if(error){
+				if(error)
 					logger.error("ERROR: ", JSON.stringify(error), JSON.stringify(allTermQuery));
-				}
 
 				if(data){
 					parseString(data, function (err, result) {
 						if (err) throw err;
 				    data = result['WQX']['Organization'][0]['Activity'];
 					});
-				}else{
+				}else
 					data = {};
-				}
 
-				var higherCount = 0;
-				var lowerCount = 0;
-				var notDetected = 0;
+				higherCount = 0;
+				lowerCount = 0;
+				notDetected = 0;
 
 				if(data.length > 0){
 						for(var i = 0; i < data.length; i++){
 						if(data[i]['Result'][0]['ResultDescription'][0]['ResultDetectionConditionText']){
 							notDetected++;
-						}else if(data[i]['Result'][0]['ResultDescription'][0]['ResultMeasure'][0]['ResultMeasureValue'][0] > 15){
+						}else if(data[i]['Result'][0]['ResultDescription'][0]['ResultMeasure'][0]['ResultMeasureValue'][0] >= 15){
 							higherCount++;
 						}else if(data[i]['Result'][0]['ResultDescription'][0]['ResultMeasure'][0]['ResultMeasureValue'][0] < 15){
 							lowerCount++;
 						}
 					}
 
-					var infectedPercentage = (lowerCount + higherCount) * 100 / data.length;
+					infectedPercentage = Math.round((lowerCount + higherCount) * 100 / data.length);
 				}
 				
 
-				/*for(var state in stateCounts){
-					var th = findKeyFill(dataset, stateCounts[state] );
-					results[state.toUpperCase()] = { fillKey: th.key, count: stateCounts[state], label: th.val};
-					resultsArray.push({state:state, count:stateCounts[state]});
-				}*/
-				
-
-				var th = findKeyFill(dataset, infectedPercentage );
-				results['VA'] = { fillKey: th.key, totalSamples: data.length, infectedSamples: lowerCount + higherCount, infectedPercentage: infectedPercentage, label: th.val};
-				/*resultsArray.push({state:state, count:stateCounts[state]});*/
-				logger.info(JSON.stringify(results));
+				th = findKeyFill(dataset, infectedPercentage );
+				results[states[key]] = { fillKey: th.key, totalSamples: data.length, infectedSamples: lowerCount + higherCount, infectedPercentage: infectedPercentage, label: th.val};
 				response.mapData[dataset.name] = results;
-				/*response.orderedData[dataset.name] = resultsArray;*/
 				response.mapDataTitle[dataset.name] = dataset.title;
 				response.mapDataFills[dataset.name] = getFills(dataset);
 				response.mapDataLegends[dataset.name] = getLegends(dataset);
 
 				if (completeQueries == datasets.length){
-					/*logger.debug('results: ' + JSON.stringify(response));*/
 					callback(null, response);
 				}
+
 			});
     });//end dataset iteration
 
+});
 
 	 function findKeyFill(dataset, count){
 	    	var max = {};
