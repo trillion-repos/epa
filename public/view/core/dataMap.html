@@ -4,20 +4,38 @@
 
 	<h2 class="dataMapTitle">{{title}}</h2>
 	<p class="instructions">(Select State for Details)</p>
-	<div class="datasets">
-		<div class="radio radio-info radio-circle" style="" data-ng-click="changeMap('drug')">
-			<input type="radio" data-ng-checked="selectedDatasetDrugs" id="radio1"> 
-			<label for="radio1">	<strong>Drugs</strong> </label> 
+	<div class="leftContainer">	
+		<div class="datasets">
+			<div class="radio radio-info radio-circle" style="" data-ng-click="makeRequest()">
+				<input type="radio" name="radioList" data-ng-model="selectedYear" id="radio1" ng-value="0"/> 
+				<label for="radio1">	<strong>1 Year</strong> </label> 
+			</div>
+
+			<div class="radio radio-info radio-circle" style="" data-ng-click="makeRequest()">
+				<input type="radio" name="radioList" data-ng-model="selectedYear" id="radio2" ng-value="1"/> 
+				<label for="radio2">	<strong>3 Year</strong> </label> 
+			</div>
+
+			<div class="radio radio-info radio-circle" style=""data-ng-click="makeRequest()">
+				<input type="radio" name="radioList" data-ng-model="selectedYear" id="radio3" ng-value="2"/> 
+				<label for="radio3"> <strong>5 Years</strong> </label>
+			</div>
+			<div class="radio radio-info radio-circle" style=""data-ng-click="makeRequest()">
+				<input type="radio" name="radioList" data-ng-model="selectedYear" id="radio4" ng-value="3"/> 
+				<label for="radio4"> <strong>10 Years</strong> </label>
+			</div>
 		</div>
-		<div class="radio radio-info radio-circle" style="" data-ng-click="changeMap('device')">
-			<input type="radio" data-ng-checked="selectedDatasetDevices" id="radio2"> 
-			<label for="radio2"> <strong>Devices</strong> </label> 
+		<div> 
+			<label for="singleSelect"> Select Characteristic: </label><br>
+			<select name="singleSelect" ng-model="characteristics">
+				<option value="lead">Lead</option>
+			</select><br>
 		</div>
-		<div class="radio radio-info radio-circle" style=""data-ng-click="changeMap('food')">
-			<input type="radio" data-ng-checked="selectedDatasetFood" id="radio3"> 
-			<label for="radio3"> <strong>Foods</strong> </label>
-		</div>
+		
 	</div>
+	
+	
+
 	<div class="fdaDataMap preloader-parent">
 		
 		<div class="absolute-center overlay" data-ng-show="isLoading">

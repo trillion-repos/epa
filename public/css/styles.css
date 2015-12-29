@@ -479,7 +479,7 @@ td {
 }
 
 .datasets{
-	/* margin-bottom: -10%; */
+	margin-bottom: 20px;
 	font-size: 1vw;
 	background-color: #FCEDB6;
 	border-radius: 8px;
@@ -489,6 +489,10 @@ td {
 	padding-top: 1vh;
 	padding-bottom: 1vh;
 	color: rgb(92, 88, 88);
+	
+}
+
+.leftContainer{
 	float:left;
 }
 

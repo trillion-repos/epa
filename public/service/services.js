@@ -70,7 +70,7 @@ function(FetchOpenFDASrvc) {
     		 callback(null, mapData, true);
     	 }
     	 else{
-	    	 FetchOpenFDASrvc.get({appId:routeParams.appId, modId: routeParams.modId, fnId:routeParams.fnId, qId:qId},
+	    	 FetchOpenFDASrvc.get({appId:routeParams.appId, modId: routeParams.modId, fnId:routeParams.fnId, qId:qId, startDate:routeParams.date},
 	 				function success(response) {
 	 					
 	 				//SharedDataSrvc.setView("mapRps");
@@ -104,6 +104,7 @@ function(FetchOpenFDASrvc) {
  		graphParams.fnId = routeParams.fnId;
  		graphParams.qId = qId;
  		graphParams.state = state.stateCode.toLowerCase();
+		graphParams.startDate = routeParams.date;
  		
  		
  		if(year){
@@ -119,7 +120,7 @@ function(FetchOpenFDASrvc) {
  					callback();
  					
  					if(!response){
- 						console.warn("No data found for graph="+$routeParams);
+ 						console.warn("No data found for graph="+ routeParams);
  						return;
  					}
  					

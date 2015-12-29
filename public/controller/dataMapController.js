@@ -9,6 +9,8 @@ openFDA.controller('DataMapCtrl', [ '$rootScope', '$scope', 'FetchOpenFDASrvc', 
 	var isTableTop = false;
 	var top = {};
 	var bottom = {};
+	$scope.selectedYear = "0";			
+  $scope.characteristics = "lead";
 	
 	
 	
@@ -22,10 +24,6 @@ openFDA.controller('DataMapCtrl', [ '$rootScope', '$scope', 'FetchOpenFDASrvc', 
 			    legendHeight: 60// optionally set the padding for the legend
 
 			  },
-			  geographyConfig: {
-			    highlighBorderColor: '#EAA9A8',
-			    highlighBorderWidth: 2
-			  },
 			  fills: {/*
 				"VH":'#2a4644',
 			    "H": '#558C89',
@@ -36,53 +34,57 @@ openFDA.controller('DataMapCtrl', [ '$rootScope', '$scope', 'FetchOpenFDASrvc', 
 			  },
 			  data: {},
 			  geographyConfig: {
+								highlighBorderColor: '#EAA9A8',
+			    			highlighBorderWidth: 2,
 		            popupTemplate: function(geo, data) {
 		            	if(!data)
 		            		return ['<div class="hoverinfo"><strong>',
-			                        'No Known Recalls for ' + geo.properties.name
+			                        'No Available Data for ' + geo.properties.name
 			                       ].join('');
 		            	
 		                return ['<div class="hoverinfo"><strong>',
-		                        'Number of Recalls in ' + geo.properties.name,
-		                        ': ' + data.count,
+		                        'State: ' + geo.properties.name,
+		                        'Total Samples: ' + data.totalSamples,
+														'Infected Samples: ' + data.infectedSamples,
+														'Infected Percentage: ' + data.infectedPercentage,
 		                        '</strong></div>'].join('');
 		            }
 		        }
 			};
 	
-	$scope.changeTopStates = function(){
-		var selectedDataset = SharedDataSrvc.getSelectedDataset();
-		isTableTop = !isTableTop;
+// 	$scope.changeTopStates = function(){
+// 		var selectedDataset = SharedDataSrvc.getSelectedDataset();
+// 		isTableTop = !isTableTop;
 		
-		if(isTableTop){
+// 		if(isTableTop){
 			
-			if(!top[selectedDataset])
-				top[selectedDataset] = $scope.orderedData.slice(0,10);
+// 			if(!top[selectedDataset])
+// 				top[selectedDataset] = $scope.orderedData.slice(0,10);
 			
-			$scope.glyPos = "down";
-			$scope.tableTopTitle = "Top ";
-			$scope.orderedDataTable = top[selectedDataset];
-		}
-		else{			
+// 			$scope.glyPos = "down";
+// 			$scope.tableTopTitle = "Top ";
+// 			$scope.orderedDataTable = top[selectedDataset];
+// 		}
+// 		else{			
 
-			if(!bottom[selectedDataset])
-				bottom[selectedDataset] = $scope.orderedData.reverse().slice(0,10);
+// 			if(!bottom[selectedDataset])
+// 				bottom[selectedDataset] = $scope.orderedData.reverse().slice(0,10);
 			
-			$scope.glyPos = "up";
-			$scope.tableTopTitle = "Bottom ";
-			$scope.orderedDataTable = bottom[selectedDataset];
-		}
-	};
+// 			$scope.glyPos = "up";
+// 			$scope.tableTopTitle = "Bottom ";
+// 			$scope.orderedDataTable = bottom[selectedDataset];
+// 		}
+// 	};
 	
-	$scope.selectedDatasetDrugs = true;
+// 	$scope.selectedDatasetDrugs = true;
 	
 	$scope.changeMap = function(dataset, isReload){
 		SharedDataSrvc.setSelectedDataset(dataset);
-		isTableTop = false;
+		//isTableTop = false;
 		$scope.theMap.data = mapDataAll[dataset];
 		$scope.theMap.fills = mapFillsAll[dataset];
 		$scope.orderedData = orderedDataAll[dataset];
-		$scope.changeTopStates(dataset);
+		//$scope.changeTopStates(dataset);
 		$scope.title = titleAll[dataset];
 		$scope.theMap.options.mapLegends = mapLegends[dataset];
 		$scope.mapPluginData = {customLegend:mapLegends[dataset]};
@@ -101,46 +103,67 @@ openFDA.controller('DataMapCtrl', [ '$rootScope', '$scope', 'FetchOpenFDASrvc', 
 		
 		//$scope.map.updateChoropleth();
 		
-		switch (dataset) {
-		case "drug":
-			$scope.selectedDatasetDrugs = true;
-			$scope.selectedDatasetDevices = false;
-			$scope.selectedDatasetFood = false;
-			break;
-		case "device":
-			$scope.selectedDatasetDrugs = false;
-			$scope.selectedDatasetDevices = true;
-			$scope.selectedDatasetFood = false;
-			break;
-		case "food":
-			$scope.selectedDatasetDrugs = false;
-			$scope.selectedDatasetDevices = false;
-			$scope.selectedDatasetFood = true;
-			break;
-		default:
-			break;
-		}
+// 		switch (dataset) {
+// 		case "drug":
+// 			$scope.selectedDatasetDrugs = true;
+// 			$scope.selectedDatasetDevices = false;
+// 			$scope.selectedDatasetFood = false;
+// 			break;
+// 		case "device":
+// 			$scope.selectedDatasetDrugs = false;
+// 			$scope.selectedDatasetDevices = true;
+// 			$scope.selectedDatasetFood = false;
+// 			break;
+// 		case "food":
+// 			$scope.selectedDatasetDrugs = false;
+// 			$scope.selectedDatasetDevices = false;
+// 			$scope.selectedDatasetFood = true;
+// 			break;
+// 		default:
+// 			break;
+// 		}
+ 	};
+			
+	var getStartDate = function (){
+		var now=new Date();
+					var oneYearMs = 1000*60*60*24*365;		
+					switch($scope.selectedYear){
+						case "1":
+							oneYearMs = oneYearMs *3;
+							break;
+						case "2":
+							oneYearMs = oneYearMs *5;
+							break;
+						case "3":
+							oneYearMs = oneYearMs *10;
+							break;
+					}	
+					now.setTime(now.getTime() - oneYearMs);			
+					now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+					return now.toJSON().slice(0, 10);	
 	};
 	
-	var response = SharedDataSrvc.getMapData($routeParams, "mapus", function(err, response, isReload){
-		var selectedDataset = SharedDataSrvc.getSelectedDataset();
-		if(err){
-			console.error(JSON.stringify(err));
-			return;
-		}
-		
-		mapDataAll = response.mapData;
-		orderedDataAll = response.orderedData;
-		titleAll = response.mapDataTitle;
-		mapFillsAll = response.mapDataFills;
-		mapLegends = response.mapDataLegends;
-		$scope.mapPluginData = {customLegend:mapLegends[selectedDataset]};
-		
-		$scope.changeMap(selectedDataset, isReload);
-	});
+	$scope.makeRequest = function (){
+					$routeParams.date = getStartDate();
+					SharedDataSrvc.getMapData($routeParams, "mapus", function(err, response, isReload){
+						//var selectedDataset = SharedDataSrvc.getSelectedDataset();
+						if(err){
+							console.error(JSON.stringify(err));
+							return;
+						}
+
+						mapDataAll = response.mapData;
+						orderedDataAll = response.orderedData;
+						titleAll = response.mapDataTitle;
+						mapFillsAll = response.mapDataFills;
+						mapLegends = response.mapDataLegends;
+						$scope.mapPluginData = {customLegend:mapLegends[$scope.characteristics]};
+
+						$scope.changeMap($scope.characteristics, isReload);
+					});
+	};
 	
-	
-	
+	$scope.makeRequest();
 	
 	$scope.theMap.responsive = true;
 			
@@ -183,6 +206,7 @@ openFDA.controller('DataMapCtrl', [ '$rootScope', '$scope', 'FetchOpenFDASrvc', 
 			$scope.theMap.data[SharedDataSrvc.getState().stateCode].fillKey = SharedDataSrvc.getFillKey();			
 		}				
 		
+		$routeParams.date = getStartDate();
 		var fKeyObj = $scope.theMap.data[geography.id] || {fillKey:'defaultFill'};
 		SharedDataSrvc.fetchData("graphRpy", state, $routeParams, null, null, fKeyObj.fillKey, function(){
 			
