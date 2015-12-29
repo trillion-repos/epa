@@ -6,7 +6,7 @@ It is assumed that [node.js v0.10.36] is installed and configured on your system
 
 #### Build
 ```sh
-$ git clone git@github.com:trillion1-repos/18f.git
+$ git clone git@github.com:trilliongit/epa.git
 $ cd 18f
 $ npm install
 $ npm install -g forever

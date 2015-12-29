@@ -121,5 +121,6 @@ module.exports = function() {
 	}
 
 	// Return Express server instance
+	
 	return app;
 };
