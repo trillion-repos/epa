@@ -3,7 +3,7 @@ var config = require("./../../config/config");
 
 module.exports = function openFDAUrl(query){
 	  var self = this;
-	  self.openFDABaseUrl = 'https://api.fda.gov/' + query.noun + '/' + query.endpoint + '.json?api_key=' + config.openFDAKey;
+	 self.openFDABaseUrl = 'http://www.waterqualitydata.us/' + query.noun + '/' + query.endpoint;
 
 	  var addUrlParam = function(url,key,value){
 	      return url += '&' + key + '=' + (value);
