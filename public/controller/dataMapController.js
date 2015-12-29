@@ -44,9 +44,9 @@ openFDA.controller('DataMapCtrl', [ '$rootScope', '$scope', 'FetchOpenFDASrvc', 
 		            	
 		                return ['<div class="hoverinfo"><strong>',
 		                        'State: ' + geo.properties.name,
-		                        'Total Samples: ' + data.totalSamples,
-														'Infected Samples: ' + data.infectedSamples,
-														'Infected Percentage: ' + data.infectedPercentage,
+		                        '<br/>Total Samples: ' + data.totalSamples,
+														'<br/>Infected Samples: ' + data.infectedSamples,
+														'<br/>Infected Percentage: ' + data.infectedPercentage,
 		                        '</strong></div>'].join('');
 		            }
 		        }
@@ -128,19 +128,19 @@ openFDA.controller('DataMapCtrl', [ '$rootScope', '$scope', 'FetchOpenFDASrvc', 
 		var now=new Date();
 					var oneYearMs = 1000*60*60*24*365;		
 					switch($scope.selectedYear){
-						case "1":
+						case 1:
 							oneYearMs = oneYearMs *3;
 							break;
-						case "2":
+						case 2:
 							oneYearMs = oneYearMs *5;
 							break;
-						case "3":
+						case 3:
 							oneYearMs = oneYearMs *10;
 							break;
 					}	
 					now.setTime(now.getTime() - oneYearMs);			
 					now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-					return now.toJSON().slice(0, 10);	
+					return now.getMonth()+1 + "-" + now.getDate() + "-" + now.getFullYear();	
 	};
 	
 	$scope.makeRequest = function (){
