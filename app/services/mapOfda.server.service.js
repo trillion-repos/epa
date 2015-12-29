@@ -4,6 +4,7 @@ var queryService = require("./queryOfda.server.service");
 var config = require("./../../config/config");
 var states = config.states;
 var logger = require('./../utils/logger.js')(module);
+var parseString = require('xml2js').parseString;
 
 
 
@@ -60,17 +61,10 @@ module.exports.mapus = function(params, callback){
 
 				var stateCounts = {};
 				data.results.forEach(function(entry){
-					for(var state in states){
-						if(entry.term === state || entry.term === states[state]){
-							if(!stateCounts[state]){
-								stateCounts[state] = 0;
-							}
-							stateCounts[state] += entry.count;
-						}
-					}
+					logger.info("Chirag");
 				});
 
-				for(var state in stateCounts){
+				/*for(var state in stateCounts){
 					var th = findKeyFill(dataset, stateCounts[state] );
 					results[state.toUpperCase()] = { fillKey: th.key, count: stateCounts[state], label: th.val};
 					resultsArray.push({state:state, count:stateCounts[state]});
@@ -88,7 +82,7 @@ module.exports.mapus = function(params, callback){
 					logger.debug('results: ' + JSON.stringify(response));
 					callback(null, response);
 				}
-
+*/
 			});
     });//end dataset iteration
 
