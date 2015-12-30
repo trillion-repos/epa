@@ -10,6 +10,7 @@ var completeQueries;
 var count;
 var clear;
 var results = {};
+var leadLimit = config.thresholds.lead;
 
 
 module.exports.mapus = function(params, callback){
@@ -38,7 +39,7 @@ module.exports.mapus = function(params, callback){
 			clear = setInterval(function(){
 				
 				some(keys, params, dataset);
-			},450);
+			},config.ApiReqIntervalMs);
 			
 					
 });
@@ -133,9 +134,9 @@ module.exports.mapus = function(params, callback){
 						for(var i = 0; i < data.length; i++){
 						if(data[i]['Result'][0]['ResultDescription'][0]['ResultDetectionConditionText']){
 							notDetected++;
-						}else if(data[i]['Result'][0]['ResultDescription'][0]['ResultMeasure'][0]['ResultMeasureValue'][0] >= 1){
+						}else if(data[i]['Result'][0]['ResultDescription'][0]['ResultMeasure'][0]['ResultMeasureValue'][0] >= leadLimit){
 							higherCount++;
-						}else if(data[i]['Result'][0]['ResultDescription'][0]['ResultMeasure'][0]['ResultMeasureValue'][0] < 1){
+						}else if(data[i]['Result'][0]['ResultDescription'][0]['ResultMeasure'][0]['ResultMeasureValue'][0] < leadLimit){
 							lowerCount++;
 						}
 					}

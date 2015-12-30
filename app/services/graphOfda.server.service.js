@@ -10,6 +10,13 @@ module.exports.graphRpy = function (params, callback){
 	var datasets = [{name:params.datasetId, displayName:params.datasetId.capitalize()}];
 	var state = params.stateName;
 	var leadLimit = config.thresholds.lead;
+	var states = config.states;
+	var stateCode;
+	
+	for(var k in states){
+		if(states[k] ===  params.state.toUpperCase())
+			stateCode = k;
+	}
 	
 	datasets.forEach(function(dataset){
 		var query = {
@@ -17,7 +24,7 @@ module.exports.graphRpy = function (params, callback){
 			    noun:'Result',
 		    endpoint:'search?mimeType=xml',
 		    params:{
-		      statecode:'US:51',
+		      statecode: stateCode,
 		      characteristicName:params.datasetId.capitalize(),
 		      startDateLo:params.startDate
 		    }

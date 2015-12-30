@@ -9,9 +9,8 @@ module.exports = {
 	
 	port: process.env.PORT || 3000,
 	
-	openFDAKey: [
-		'fFsuBHHNsIWx1Kf4NUKuNGl5pcLijXeCqCvhVM9I'
-	],
+	thresholds: {lead:1},
+	ApiReqIntervalMs:1000,
 	  states: {
 		  	"US:01": "AL",
 		    "US:02": "AK",
