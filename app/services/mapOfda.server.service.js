@@ -38,7 +38,7 @@ module.exports.mapus = function(params, callback){
 			clear = setInterval(function(){
 				
 				some(keys, params, dataset);
-			},500);
+			},450);
 			
 					
 });
@@ -124,6 +124,7 @@ module.exports.mapus = function(params, callback){
 				var lowerCount = 0;
 				var notDetected = 0;
 				var infectedPercentage;
+				var totalSamples = 0;
 				var th;
 				
         		var resultsArray = [];
@@ -132,19 +133,23 @@ module.exports.mapus = function(params, callback){
 						for(var i = 0; i < data.length; i++){
 						if(data[i]['Result'][0]['ResultDescription'][0]['ResultDetectionConditionText']){
 							notDetected++;
-						}else if(data[i]['Result'][0]['ResultDescription'][0]['ResultMeasure'][0]['ResultMeasureValue'][0] >= 15){
+						}else if(data[i]['Result'][0]['ResultDescription'][0]['ResultMeasure'][0]['ResultMeasureValue'][0] >= 1){
 							higherCount++;
-						}else if(data[i]['Result'][0]['ResultDescription'][0]['ResultMeasure'][0]['ResultMeasureValue'][0] < 15){
+						}else if(data[i]['Result'][0]['ResultDescription'][0]['ResultMeasure'][0]['ResultMeasureValue'][0] < 1){
 							lowerCount++;
 						}
 					}
 
-					infectedPercentage = Math.round((higherCount) * 100 / data.length);
+						infectedPercentage = Math.round((higherCount) * 100 / data.length);
+						totalSamples = data.length;
+				}
+				else{
+					infectedPercentage = 0;
 				}
 				
 
 				th = findKeyFill(dataset, infectedPercentage );
-				results[states[allTermQuery.params.statecode]] = { fillKey: th.key, totalSamples: data.length, infectedSamples: higherCount, infectedPercentage: infectedPercentage, label: th.val};
+				results[states[allTermQuery.params.statecode]] = { fillKey: th.key, totalSamples: totalSamples, infectedSamples: higherCount, infectedPercentage: infectedPercentage, label: th.val};
 				
 
 				if (completeQueries == keys.length){
@@ -152,7 +157,6 @@ module.exports.mapus = function(params, callback){
 					response.mapDataTitle[dataset.name] = dataset.title;
 					response.mapDataFills[dataset.name] = getFills(dataset);
 					response.mapDataLegends[dataset.name] = getLegends(dataset);
-					logger.info(JSON.stringify(response));
 						callback(null, response);
 				}
 			});
