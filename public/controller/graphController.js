@@ -54,7 +54,7 @@ openFDA.controller('GraphCtrl', [
 			  yAxisTickFormat: 's', //refer tickFormats in d3 to edit this value
 			  xAxisMaxTicks: 12, // Optional: maximum number of X axis ticks to show if data points exceed this number
 			  yAxisTickFormat: 's', // refer tickFormats in d3 to edit this value,
-			  yAxisLabel: '# of Samples',
+			  yAxisLabel: '# of Infected Samples',
 			  waitForHeightAndWidth: true // if true, it will not throw an error when the height or width are not defined (e.g. while creating a modal form), and it will be keep watching for valid height and width values
 			};
 			
