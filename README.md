@@ -1,6 +1,6 @@
 ## Trillion EPA Data Visualization Platform
 
-Trillion Technology Solutions, Inc. [(Trillion)] (http://www.ttsiglobal.com) has implemented a prototype – “Trillion OpenEPA Data Visualization Platform” [(ODV Platform)] (https://epaci.ttsiglobal.com) - in response to EPA/OEI Environmental Digital Services that leverages industry leading open source technology stacks and developed using Agile development methodology.
+Trillion Technology Solutions, Inc. [(Trillion)] (http://www.ttsiglobal.com) has implemented a prototype – “Trillion OpenEPA Data Visualization Platform” [(ODV Platform)] (http://epaci.ttsiglobal.com) - in response to EPA/OEI Environmental Digital Services that leverages industry leading open source technology stacks and developed using Agile development methodology.
 ## Methodology Approach
 Trillion leveraged several years of Agile experience in commercial and government sectors this experience to create a compact set of Agile sprints for development a solution for the challenge posed by EPA/OEI.  Our team was self-organizing, cross-functional, and participated in flushing out user stories, design and development, unit and integration testing.  A conference room was barricaded off from the rest of the company and was used exclusively by the [ODV Platform Agile team] (https://tree.taiga.io/project/anjantrillion-epa-eds/team) for [daily Scrums, discussions and collaborative team development.](https://github.com/trilliongit/epa/blob/e6376c0d1da4d4b373f37768df9cd14cd074b2f7/doc/WorkeringSessions.pdf)
 
