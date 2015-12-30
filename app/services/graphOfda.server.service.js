@@ -9,9 +9,7 @@ module.exports.graphRpy = function (params, callback){
 	var graphEntries = {};
 	var datasets = [{name:params.datasetId, displayName:params.datasetId.capitalize()}];
 	var state = params.stateName;
-
-	
-	console.log("PARAMS: "+JSON.stringify(params));
+	var leadLimit = config.thresholds.lead;
 	
 	datasets.forEach(function(dataset){
 		var query = {
@@ -49,7 +47,7 @@ module.exports.graphRpy = function (params, callback){
 								graphData[year] = [];
 							
 							if(d.Result[0].ResultDescription[0].ResultMeasure && 
-								 														d.Result[0].ResultDescription[0].ResultMeasure[0].ResultMeasureValue[0] >= 0.15){
+								 														d.Result[0].ResultDescription[0].ResultMeasure[0].ResultMeasureValue[0] >= leadLimit){
 								graphData[year].push(d.Result[0].ResultDescription[0].ResultMeasure[0].ResultMeasureValue[0]);
 							}
 						});
