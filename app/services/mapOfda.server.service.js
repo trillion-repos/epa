@@ -6,8 +6,10 @@ var states = config.states;
 var logger = require('./../utils/logger.js')(module);
 var parseString = require('xml2js').parseString;
 var response = {};
-var completeQueries = 0;
+var completeQueries;
+var count;
 var clear;
+var results = {};
 
 
 module.exports.mapus = function(params, callback){
@@ -17,6 +19,9 @@ module.exports.mapus = function(params, callback){
 	response.mapDataTitle = {};
 	response.mapDataFills = {};
 	response.mapDataLegends = {};
+	completeQueries = 0;
+	count = 0;
+	clear = 0;
  
 
     var datasets = [{name:"lead",title:"Lead contamination", defaultFill:"#ECECEA", selectedFill:'#f5d76e', thresholds:[{val:0, color:"#D5E7E6", key:"L"}, {val:25, color:"#74AFAD", key:"M"}, {val:50, color:"#558C89", key:"H"}, {val:75, color:"#2a4644", key:"VH"}]}];
@@ -28,25 +33,14 @@ module.exports.mapus = function(params, callback){
         
 
         var keys = Object.keys(states);
-	    	for(var j = 0; j < keys.length; j++){
 		        
 			/*clear = setInterval(function(){some(keys, allTermQuery, dataset)},10000);*/
 			clear = setInterval(function(){
-				allTermQuery = {
-				    queryId: 1,
-				    noun:'Result',
-				    endpoint:'search?mimeType=xml',
-				    params:{
-				      characteristicName:'Lead',
-				      startDateLo: params.startDate,
-				      statecode: keys[j]
-				    }
-				}
-				some(keys, allTermQuery, dataset);
-			},1000);
+				
+				some(keys, params, dataset);
+			},500);
 			
 					
-	}
 });
 
 	 function findKeyFill(dataset, count){
@@ -97,7 +91,21 @@ module.exports.mapus = function(params, callback){
 	  	  return 0;
 	  }
 
-	  function some(keys, allTermQuery, dataset){
+	  function some(keys, params, dataset){
+	  	var allTermQuery = {
+				    queryId: count,
+				    noun:'Result',
+				    endpoint:'search?mimeType=xml',
+				    params:{
+				      characteristicName:'Lead',
+				      startDateLo: params.startDate,
+				      statecode: keys[count]
+				    }
+				}
+				if(count < keys.length)
+					count++;
+				if(count == keys.length)
+					clearInterval(clear);
 	  	queryService.getData(allTermQuery,function(error,data, query){
 				completeQueries++;
 
@@ -117,7 +125,7 @@ module.exports.mapus = function(params, callback){
 				var notDetected = 0;
 				var infectedPercentage;
 				var th;
-				var results = {};
+				
         		var resultsArray = [];
 
 				if(data.length > 0){
@@ -137,14 +145,15 @@ module.exports.mapus = function(params, callback){
 
 				th = findKeyFill(dataset, infectedPercentage );
 				results[states[allTermQuery.params.statecode]] = { fillKey: th.key, totalSamples: data.length, infectedSamples: higherCount, infectedPercentage: infectedPercentage, label: th.val};
-				response.mapData[dataset.name] = results;
-				response.mapDataTitle[dataset.name] = dataset.title;
-				response.mapDataFills[dataset.name] = getFills(dataset);
-				response.mapDataLegends[dataset.name] = getLegends(dataset);
+				
 
 				if (completeQueries == keys.length){
+					response.mapData[dataset.name] = results;
+					response.mapDataTitle[dataset.name] = dataset.title;
+					response.mapDataFills[dataset.name] = getFills(dataset);
+					response.mapDataLegends[dataset.name] = getLegends(dataset);
+					logger.info(JSON.stringify(response));
 						callback(null, response);
-						clearInterval(clear);
 				}
 			});
 	  }
