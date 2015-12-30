@@ -3,8 +3,6 @@
 var queryService = require("./queryOfda.server.service");
 var config = require('./../../config/config');
 var parseString = require('xml2js').parseString;
-var Converter = require("csvtojson").Converter;
-var converter = new Converter({});
 
 module.exports.graphRpy = function (params, callback){
 	var response = {};
@@ -41,12 +39,6 @@ module.exports.graphRpy = function (params, callback){
 			}
 
 			if(data){
-				
-				converter.fromString(data, function(err,result){
-					console.log(result);
-				});
-				
-				
 					parseString(data, function (err, result) {
 						if (err) throw err;
 						

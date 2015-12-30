@@ -29,7 +29,7 @@ openFDA.controller('DataMapCtrl', [ '$rootScope', '$scope', 'FetchOpenFDASrvc', 
 			    "H": '#558C89',
 			    "M": '#74AFAD',
 			    "L": '#D5E7E6',*/
-			    'defaultFill': '#ECECEA', 
+			    'defaultFill': '#D5E7E6', 
 			    'selectedFill': '#F5D76E'
 			  },
 data:{
