@@ -18,25 +18,25 @@ openFDA.controller('GraphCtrl', [
   									},			  
 			  mouseout: function(d) {},
 			  click: function(d){ 
-									$activityIndicator.startAnimating();
-									$scope.isLoading = true;
+// 									$activityIndicator.startAnimating();
+// 									$scope.isLoading = true;
 					
-				  					if(SharedDataSrvc.getView() === 'graphRpy'){
-				  						SharedDataSrvc.fetchData("graphRpy", $scope.state, $routeParams, SharedDataSrvc.getCurrentYear, null, null, function(){
+// 				  					if(SharedDataSrvc.getView() === 'graphRpy'){
+// 				  						SharedDataSrvc.fetchData("graphRpy", $scope.state, $routeParams, SharedDataSrvc.getCurrentYear, null, null, function(){
 				  							
-				  							$scope.isLoading = false;
-				  							$activityIndicator.stopAnimating();
-				  						});
-				  					}
+// 				  							$scope.isLoading = false;
+// 				  							$activityIndicator.stopAnimating();
+// 				  						});
+// 				  					}
 
-				  					else if(SharedDataSrvc.getView() === 'graphRpm') {
-			  							SharedDataSrvc.fetchData("tableRpm", $scope.state, $routeParams, SharedDataSrvc.getCurrentYear, $scope.currentMonth, null, function(){
-			  								$scope.isLoading = false;
-				  							$activityIndicator.stopAnimating();
-			  							});
-				  					}
+// 				  					else if(SharedDataSrvc.getView() === 'graphRpm') {
+// 			  							SharedDataSrvc.fetchData("tableRpm", $scope.state, $routeParams, SharedDataSrvc.getCurrentYear, $scope.currentMonth, null, function(){
+// 			  								$scope.isLoading = false;
+// 				  							$activityIndicator.stopAnimating();
+// 			  							});
+// 				  					}
 				  					
-				  					SharedDataSrvc.setView('graphRpm');
+// 				  					SharedDataSrvc.setView('graphRpm');
 		  							},
 			  // legend config
 			  legend: {
@@ -54,7 +54,7 @@ openFDA.controller('GraphCtrl', [
 			  yAxisTickFormat: 's', //refer tickFormats in d3 to edit this value
 			  xAxisMaxTicks: 12, // Optional: maximum number of X axis ticks to show if data points exceed this number
 			  yAxisTickFormat: 's', // refer tickFormats in d3 to edit this value,
-			  yAxisLabel: '# of Recalls',
+			  yAxisLabel: '# of Samples',
 			  waitForHeightAndWidth: true // if true, it will not throw an error when the height or width are not defined (e.g. while creating a modal form), and it will be keep watching for valid height and width values
 			};
 			

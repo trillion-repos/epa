@@ -9,7 +9,7 @@ openFDA.controller('DataMapCtrl', [ '$rootScope', '$scope', 'FetchOpenFDASrvc', 
 	var isTableTop = false;
 	var top = {};
 	var bottom = {};
-	$scope.selectedYear = "0";			
+	$scope.selectedYear = "2";			
   $scope.characteristics = "lead";
 	
 	
@@ -32,14 +32,115 @@ openFDA.controller('DataMapCtrl', [ '$rootScope', '$scope', 'FetchOpenFDASrvc', 
 			    'defaultFill': '#ECECEA', 
 			    'selectedFill': '#F5D76E'
 			  },
-			  data: {},
+			  data:{
+  "az": {
+  },
+  "co": {
+  },
+  "de": {
+  },
+  "fl": {
+  },
+  "ga": {
+  },
+  "hi": {
+  },
+  "id": {
+  },
+  "il": {
+  },
+  "in": {
+  },
+  "ia": {
+  },
+  "ks": {
+  },
+  "ky": {
+  },
+  "la": {
+  },
+  "md": {
+  },
+  "me": {
+  },
+  "ma": {
+  },
+  "mn": {
+  },
+  "mi": {
+  },
+  "ms": {
+  },
+  "mo": {
+  },
+  "mt": {
+  },
+  "nc": {
+  },
+  "ne": {
+  },
+  "nv": {
+  },
+  "nh": {
+  },
+  "nj": {
+  },
+  "ny": {
+  },
+  "nd": {
+  },
+  "nm": {
+  },
+  "oh": {
+  },
+  "ok": {
+  },
+  "or": {
+  },
+  "pa": {
+  },
+  "ri": {
+  },
+  "sc": {
+  },
+  "sd": {
+  },
+  "tn": {
+  },
+  "tx": {
+  },
+  "ut": {
+  },
+  "wi": {
+  },
+  "va": {
+  },
+  "vt": {
+  },
+  "wa": {
+  },
+  "wv": {
+  },
+  "wy": {
+  },
+  "ca": {
+  },
+  "ct": {
+  },
+  "ak": {
+  },
+  "ar": {
+  },
+  "al": {
+  }
+},
 			  geographyConfig: {
 								highlighBorderColor: '#EAA9A8',
 			    			highlighBorderWidth: 2,
 		            popupTemplate: function(geo, data) {
 		            	if(!data)
 		            		return ['<div class="hoverinfo"><strong>',
-			                        'No Available Data for ' + geo.properties.name
+			                        geo.properties.name,"</strong></div>"
 			                       ].join('');
 		            	
 		                return ['<div class="hoverinfo"><strong>',
@@ -107,7 +208,7 @@ openFDA.controller('DataMapCtrl', [ '$rootScope', '$scope', 'FetchOpenFDASrvc', 
 	var getStartDate = function (){
 		var now=new Date();
 					var oneYearMs = 1000*60*60*24*365;		
-					switch($scope.selectedYear){
+					switch(Number($scope.selectedYear)){
 						case 1:
 							oneYearMs = oneYearMs *3;
 							break;
@@ -125,24 +226,24 @@ openFDA.controller('DataMapCtrl', [ '$rootScope', '$scope', 'FetchOpenFDASrvc', 
 	
 	$scope.makeRequest = function (){
 					$routeParams.date = getStartDate();
-					$activityIndicator.startAnimating();
-					$scope.isLoading = true;
-					SharedDataSrvc.getMapData($routeParams, "mapus", function(err, response, isReload){
-						//var selectedDataset = SharedDataSrvc.getSelectedDataset();
-						if(err){
-							console.error(JSON.stringify(err));
-							return;
-						}
+					//$activityIndicator.startAnimating();
+					//$scope.isLoading = true;
+// 					SharedDataSrvc.getMapData($routeParams, "mapus", function(err, response, isReload){
+// 						//var selectedDataset = SharedDataSrvc.getSelectedDataset();
+// 						if(err){
+// 							console.error(JSON.stringify(err));
+// 							return;
+// 						}
 
-						mapDataAll = response.mapData;
-						orderedDataAll = response.orderedData;
-						titleAll = response.mapDataTitle;
-						mapFillsAll = response.mapDataFills;
-						mapLegends = response.mapDataLegends;
-						$scope.mapPluginData = {customLegend:mapLegends[$scope.characteristics]};
+// 						mapDataAll = response.mapData;
+// 						orderedDataAll = response.orderedData;
+// 						titleAll = response.mapDataTitle;
+// 						mapFillsAll = response.mapDataFills;
+// 						mapLegends = response.mapDataLegends;
+// 						$scope.mapPluginData = {customLegend:mapLegends[$scope.characteristics]};
 
-						$scope.changeMap($scope.characteristics, isReload);
-					});
+// 						$scope.changeMap($scope.characteristics, isReload);
+// 					});
 	};
 	
 	$scope.makeRequest();
@@ -185,7 +286,7 @@ openFDA.controller('DataMapCtrl', [ '$rootScope', '$scope', 'FetchOpenFDASrvc', 
 		
 		//un-highlight selected state
 		if(SharedDataSrvc.getFillKey()){
-			$scope.theMap.data[SharedDataSrvc.getState().stateCode].fillKey = SharedDataSrvc.getFillKey();			
+			$scope.theMap.data[SharedDataSrvc.getState().stateCode.toLowerCase()].fillKey = SharedDataSrvc.getFillKey();			
 		}				
 		
 		$routeParams.date = getStartDate();
@@ -198,7 +299,7 @@ openFDA.controller('DataMapCtrl', [ '$rootScope', '$scope', 'FetchOpenFDASrvc', 
 		});
 		
 		//highlight selected state
-		$scope.theMap.data[geography.id].fillKey = 'selectedFill'; 
+		$scope.theMap.data[geography.id.toLowerCase()].fillKey = 'selectedFill'; 
 	};
 	
 	
