@@ -7,8 +7,11 @@ var queryCache = {};
 
 module.exports.queryOpenFDA = function(req, res){
     console.log(JSON.stringify(req.query));
-    if(req.query.clearCache)
+    if(req.params.clearCache){
         queryCache = {};
+				res.send("Cache Cleared");
+				return;
+		}
 	var queryId = req.params.qId;
     var datasetId = req.params.datasetId;
     var appId = req.params.appId;
