@@ -9,7 +9,7 @@ module.exports = {
 	
 	port: process.env.PORT || 3000,
 	
-	thresholds: {lead:1},
+	thresholds: {lead:0},
 	ApiReqIntervalMs:1000,
 	  states: {
 		  	"US:01": "AL",
