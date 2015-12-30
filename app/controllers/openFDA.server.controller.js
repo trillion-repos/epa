@@ -31,7 +31,7 @@ module.exports.queryOpenFDA = function(req, res){
     		if(error)
     			res.status("500").send(error.message);
     		else{
-    			queryCache[key] = response;
+    			queryCache[key] = JSON.parse(JSON.stringify(response));
     			res.send(response);
     		}
     	});
