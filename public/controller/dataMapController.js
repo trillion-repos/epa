@@ -100,28 +100,8 @@ openFDA.controller('DataMapCtrl', [ '$rootScope', '$scope', 'FetchOpenFDASrvc', 
 				$scope.theMap.data[SharedDataSrvc.getState().stateCode].fillKey = SharedDataSrvc.getFillKey();			
 			}
 		}
-		
-		//$scope.map.updateChoropleth();
-		
-// 		switch (dataset) {
-// 		case "drug":
-// 			$scope.selectedDatasetDrugs = true;
-// 			$scope.selectedDatasetDevices = false;
-// 			$scope.selectedDatasetFood = false;
-// 			break;
-// 		case "device":
-// 			$scope.selectedDatasetDrugs = false;
-// 			$scope.selectedDatasetDevices = true;
-// 			$scope.selectedDatasetFood = false;
-// 			break;
-// 		case "food":
-// 			$scope.selectedDatasetDrugs = false;
-// 			$scope.selectedDatasetDevices = false;
-// 			$scope.selectedDatasetFood = true;
-// 			break;
-// 		default:
-// 			break;
-// 		}
+		$scope.isLoading = false;
+		$activityIndicator.stopAnimating();
  	};
 			
 	var getStartDate = function (){
@@ -145,6 +125,8 @@ openFDA.controller('DataMapCtrl', [ '$rootScope', '$scope', 'FetchOpenFDASrvc', 
 	
 	$scope.makeRequest = function (){
 					$routeParams.date = getStartDate();
+					$activityIndicator.startAnimating();
+					$scope.isLoading = true;
 					SharedDataSrvc.getMapData($routeParams, "mapus", function(err, response, isReload){
 						//var selectedDataset = SharedDataSrvc.getSelectedDataset();
 						if(err){

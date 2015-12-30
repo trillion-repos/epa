@@ -8,7 +8,7 @@ module.exports.graphRpy = function (params, callback){
 	var response = {};
 	var graphEntries = {};
 	var datasets = [{name:params.datasetId, displayName:params.datasetId.capitalize()}];
-	var state = config.states[params.state];
+	var state = params.stateName;
 
 	
 	console.log("PARAMS: "+JSON.stringify(params));
@@ -70,8 +70,7 @@ module.exports.graphRpy = function (params, callback){
 			}
 					
 				
-					response.graphTitle = "Number of Samples found with "+ dataset.displayName + " for "  + 
-						state.replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
+					response.graphTitle = "Number of Samples found with "+ dataset.displayName + " for "  + state;
 
 			//	console.log('GRAPH RESPONSE: ' + JSON.s for ringify(response));
 				callback(null, response);

@@ -103,7 +103,8 @@ function(FetchOpenFDASrvc) {
  		graphParams.modId = routeParams.modId;
  		graphParams.fnId = routeParams.fnId;
  		graphParams.qId = qId;
- 		graphParams.state = state.stateCode.toLowerCase();
+ 		graphParams.state = state.stateCode.toLowerCase();	
+		graphParams.stateName = state.stateName;	
 		graphParams.startDate = routeParams.date;
  		
  		
