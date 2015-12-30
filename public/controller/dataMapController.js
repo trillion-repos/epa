@@ -32,123 +32,173 @@ openFDA.controller('DataMapCtrl', [ '$rootScope', '$scope', 'FetchOpenFDASrvc', 
 			    'defaultFill': '#ECECEA', 
 			    'selectedFill': '#F5D76E'
 			  },
-			  data:{
-  "az": {
+data:{
+  "AZ": {
+      "fillKey": "defaultFill",
   },
-  "co": {
+  "CO": {
+      "fillKey": "defaultFill",
   },
-  "de": {
+  "DE": {
+      "fillKey": "defaultFill",
   },
-  "fl": {
+  "FL": {
+      "fillKey": "defaultFill",
   },
-  "ga": {
+  "GA": {
+      "fillKey": "defaultFill",
   },
-  "hi": {
+  "HI": {
+      "fillKey": "defaultFill",
   },
-  "id": {
+  "ID": {
+      "fillKey": "defaultFill",
   },
-  "il": {
+  "IL": {
+      "fillKey": "defaultFill",
   },
-  "in": {
+  "IN": {
+      "fillKey": "defaultFill",
   },
-  "ia": {
+  "IA": {
+      "fillKey": "defaultFill",
   },
-  "ks": {
+  "KS": {
+      "fillKey": "defaultFill",
   },
-  "ky": {
+  "KY": {
+      "fillKey": "defaultFill",
   },
-  "la": {
+  "LA": {
+      "fillKey": "defaultFill",
   },
-  "md": {
+  "MD": {
+      "fillKey": "defaultFill",
   },
-  "me": {
+  "ME": {
+      "fillKey": "defaultFill",
   },
-  "ma": {
+  "MA": {
+      "fillKey": "defaultFill",
   },
-  "mn": {
+  "MN": {
+      "fillKey": "defaultFill",
   },
-  "mi": {
+  "MI": {
+      "fillKey": "defaultFill",
   },
-  "ms": {
+  "MS": {
+      "fillKey": "defaultFill",
   },
-  "mo": {
+  "MO": {
+      "fillKey": "defaultFill",
   },
-  "mt": {
+  "MT": {
+      "fillKey": "defaultFill",
   },
-  "nc": {
+  "NC": {
+      "fillKey": "defaultFill",
   },
-  "ne": {
+  "NE": {
+      "fillKey": "defaultFill",
   },
-  "nv": {
+  "NV": {
+      "fillKey": "defaultFill",
   },
-  "nh": {
+  "NH": {
+      "fillKey": "defaultFill",
   },
-  "nj": {
+  "NJ": {
+      "fillKey": "defaultFill",
   },
-  "ny": {
+  "NY": {
+      "fillKey": "defaultFill",
   },
-  "nd": {
+  "ND": {
+      "fillKey": "defaultFill",
   },
-  "nm": {
+  "NM": {
+      "fillKey": "defaultFill",
   },
-  "oh": {
+  "OH": {
+      "fillKey": "defaultFill",
   },
-  "ok": {
+  "OK": {
+      "fillKey": "defaultFill",
   },
-  "or": {
+  "OR": {
+      "fillKey": "defaultFill",
   },
-  "pa": {
+  "PA": {
+      "fillKey": "defaultFill",
   },
-  "ri": {
+  "RI": {
+      "fillKey": "defaultFill",
   },
-  "sc": {
+  "SC": {
+      "fillKey": "defaultFill",
   },
-  "sd": {
+  "SD": {
+      "fillKey": "defaultFill",
   },
-  "tn": {
+  "TN": {
+      "fillKey": "defaultFill",
   },
-  "tx": {
+  "TX": {
+      "fillKey": "defaultFill",
   },
-  "ut": {
+  "UT": {
+      "fillKey": "defaultFill",
   },
-  "wi": {
+  "WI": {
+      "fillKey": "defaultFill",
   },
-  "va": {
+  "VA": {
+      "fillKey": "defaultFill",
   },
-  "vt": {
+  "VT": {
+      "fillKey": "defaultFill",
   },
-  "wa": {
+  "WA": {
+      "fillKey": "defaultFill",
   },
-  "wv": {
+  "WV": {
+      "fillKey": "defaultFill",
   },
-  "wy": {
+  "WY": {
+      "fillKey": "defaultFill",
   },
-  "ca": {
+  "CA": {
+      "fillKey": "defaultFill",
   },
-  "ct": {
+  "CT": {
+      "fillKey": "defaultFill",
   },
-  "ak": {
+  "AK": {
+      "fillKey": "defaultFill",
   },
-  "ar": {
+  "AR": {
+      "fillKey": "defaultFill",
   },
-  "al": {
+  "AL": {
+      "fillKey": "defaultFill",
   }
 },
 			  geographyConfig: {
 								highlighBorderColor: '#EAA9A8',
 			    			highlighBorderWidth: 2,
 		            popupTemplate: function(geo, data) {
-		            	if(!data)
+		            	
 		            		return ['<div class="hoverinfo"><strong>',
 			                        geo.properties.name,"</strong></div>"
 			                       ].join('');
 		            	
-		                return ['<div class="hoverinfo"><strong>',
-		                        'State: ' + geo.properties.name,
-		                        '<br/>Total Samples: ' + data.totalSamples,
-														'<br/>Infected Samples: ' + data.infectedSamples,
-														'<br/>Infected Percentage: ' + data.infectedPercentage,
-		                        '</strong></div>'].join('');
+// 		                return ['<div class="hoverinfo"><strong>',
+// 		                        'State: ' + geo.properties.name,
+// 		                        '<br/>Total Samples: ' + data.totalSamples,
+// 														'<br/>Infected Samples: ' + data.infectedSamples,
+// 														'<br/>Infected Percentage: ' + data.infectedPercentage,
+// 		                        '</strong></div>'].join('');
 		            }
 		        }
 			};
@@ -221,7 +271,7 @@ openFDA.controller('DataMapCtrl', [ '$rootScope', '$scope', 'FetchOpenFDASrvc', 
 					}	
 					now.setTime(now.getTime() - oneYearMs);			
 					now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-					return now.getMonth()+1 + "-" + now.getDate() + "-" + now.getFullYear();	
+					return pad(now.getMonth()+1,2) + "-" + pad(now.getDate(),2) + "-" + now.getFullYear();	
 	};
 	
 	$scope.makeRequest = function (){
@@ -286,7 +336,7 @@ openFDA.controller('DataMapCtrl', [ '$rootScope', '$scope', 'FetchOpenFDASrvc', 
 		
 		//un-highlight selected state
 		if(SharedDataSrvc.getFillKey()){
-			$scope.theMap.data[SharedDataSrvc.getState().stateCode.toLowerCase()].fillKey = SharedDataSrvc.getFillKey();			
+			$scope.theMap.data[SharedDataSrvc.getState().stateCode].fillKey = SharedDataSrvc.getFillKey();			
 		}				
 		
 		$routeParams.date = getStartDate();
@@ -299,9 +349,14 @@ openFDA.controller('DataMapCtrl', [ '$rootScope', '$scope', 'FetchOpenFDASrvc', 
 		});
 		
 		//highlight selected state
-		$scope.theMap.data[geography.id.toLowerCase()].fillKey = 'selectedFill'; 
+		$scope.theMap.data[geography.id].fillKey = 'selectedFill'; 
 	};
 	
 	
 
 		} ]);
+
+function pad(num, size) {
+    var s = "0" + num;
+    return s.substr(s.length-size);
+}
