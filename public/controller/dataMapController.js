@@ -9,7 +9,7 @@ openFDA.controller('DataMapCtrl', [ '$rootScope', '$scope', 'FetchOpenFDASrvc', 
 	var isTableTop = false;
 	var top = {};
 	var bottom = {};
-	$scope.selectedYear = "2";			
+	$scope.selectedYear = "1";			
   $scope.characteristics = "lead";
 	
 	
