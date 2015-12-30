@@ -13,7 +13,7 @@ Our [deployment architecture](https://github.com/trilliongit/epa/blob/master/doc
 ##ODV Features and Usage
 ODV Platform provides users an interactive interface that implements a drill down method to accessing recall information provided by the government. Hierarchical information access works as follows:
 * At the top level is the [home page] which takes the user to an interactive map of United States.  Water Quality information is available for each state – Drugs, Devices and Food.
-* The users can click on each state for 3 year of the map to obtain a bar graph of annual historical color coded Lead information, for each of the categories per US state. There are states such as California, Virginia and Pennsylvania with large amount of data is not processed by current working prototype.  
+* The users can click on each state for 3 year of the map to obtain a bar graph of annual historical color coded Lead information, for each of the categories per US state.  
 
 
 ## Production URL
